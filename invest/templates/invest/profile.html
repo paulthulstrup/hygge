@@ -1,0 +1,41 @@
+<h2>Hello {{ user.name }}</h2>
+
+<p>Please find bellow your current target allocation for your portfolio</p>
+{% for target in user.targetallocation_set.all %}
+    <li>{{ target }}</li>
+{% endfor %}
+
+<br>
+<br>
+<br>
+<h3>Allocate more funds</h3>
+
+<p>To help rellocate more, please enter bellow and sumbit</p>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form action="/invest/{{ user.id }}/allocate/" method="post">
+{% csrf_token %}
+    {% for target in user.targetallocation_set.all %}
+    <h5>{{  target.stock.ticker }}</h5>
+    <ul>
+        <li>
+            <label>Enter Current Position: </label>
+            <input type="text" name="bidvalue{{target.stock.ticker}}" id="bidvalue{{target.stock.ticker}}">
+        </li>
+        <li>
+            <label>Enter Bid Price: </label>
+            <input type="text" name="currentposition{{target.stock.ticker}}" id="currentposition{{forloop.counter}}">
+        </li>
+        <br>
+    </ul>
+{% endfor %}
+
+
+{#{% for choice in question.choice_set.all %}#}
+{#    <input type="radio" name="choice" id="choice1" value="{{ choice.id }}">#}
+{#    <label for="choice{{ forloop.counter }}">{{ choice.choice_text }}</label><br>#}
+{#{% endfor %}#}
+
+    <input type="submit" value="Allocate">
+</form>
